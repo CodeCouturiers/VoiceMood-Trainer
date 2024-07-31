@@ -93,7 +93,6 @@ public partial class MainWindow : Window {
         TotalFilesText.Text = $"Общее количество файлов: {totalFiles}";
     }
 
-
     // Обработчик события для ComboBox
     private void PresetComboBox_SelectionChanged(object sender,
             SelectionChangedEventArgs e) {
