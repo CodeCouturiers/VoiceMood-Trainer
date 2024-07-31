@@ -22,8 +22,6 @@ public partial class MainWindow : Window {
     private int numberOfEmotions;
     private string? selectedPresetKey;
 
-
-
     public MainWindow() {
         InitializeComponent();
         LoadRavdessData();
