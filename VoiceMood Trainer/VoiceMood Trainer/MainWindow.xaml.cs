@@ -34,61 +34,43 @@ namespace VoiceMood_Trainer
             ravdessData = JObject.Parse(jsonText);
 
             // Обновляем статистику
-            totalFiles = ravdessData["actors"].Children().Sum(actor => actor.First.Children<JObject>().Count());
-            numberOfActors = ravdessData["actors"].Count();
-            numberOfEmotions = ravdessData["presets"]["all_emotions"].Count();
+            totalFiles = ravdessData["actors"]
+                             .Children()
+                             .Sum(actor => actor.First.Children<JObject>().Count());
+            numberOfActors = ravdessData["actors"]
+                                 .Count();
+            numberOfEmotions = ravdessData["presets"]
+                               ["all_emotions"]
+                                   .Count();
 
             // Добавляем пресеты в код
-            ravdessData["presets"] = new JObject
-            {
-                // Пресеты, которые уже были
-                { "all_emotions", new JArray(
-                    "neutral",
-                    "calm",
-                    "happy",
-                    "sad",
-                    "angry",
-                    "fearful",
-                    "disgust",
-                    "surprised"
-                ) },
-                { "negative_emotions", new JArray(
-                    "sad",
-                    "angry",
-                    "fearful",
-                    "disgust"
-                ) },
-                { "positive_emotions", new JArray(
-                    "happy",
-                    "calm"
-                ) },
-                { "basic_emotions", new JArray(
-                    "happy",
-                    "sad",
-                    "angry",
-                    "fearful"
-                ) },
-                { "neutral_and_extreme", new JArray(
-                    "neutral",
-                    "happy",
-                    "angry",
-                    "fearful"
-                ) },
-                // Новые пресеты
-                { "calm_and_tension", new JArray("calm", "fearful", "angry") },
-                { "surprise_and_disgust", new JArray("surprised", "disgust") },
-                { "happy_and_sad", new JArray("happy", "sad") },
+            ravdessData["presets"] = new JObject{
+        // Пресеты, которые уже были
+        {"all_emotions", new JArray("neutral", "calm", "happy", "sad", "angry",
+                                    "fearful", "disgust", "surprised")},
+        {"negative_emotions", new JArray("sad", "angry", "fearful", "disgust")},
+        {"positive_emotions", new JArray("happy", "calm")},
+        {"basic_emotions", new JArray("happy", "sad", "angry", "fearful")},
+        {"neutral_and_extreme",
+         new JArray("neutral", "happy", "angry", "fearful")},
+        // Новые пресеты
+        {"calm_and_tension", new JArray("calm", "fearful", "angry")},
+        {"surprise_and_disgust", new JArray("surprised", "disgust")},
+        {"happy_and_sad", new JArray("happy", "sad")},
 
-                // Новые пресеты для распознавания лжи
-                { "denial_of_involvement", new JArray("fearful", "angry", "disgust", "neutral") },
-                { "covering_for_an_accomplice", new JArray("calm", "neutral", "fearful", "surprised") },
-                { "justification_of_actions", new JArray("sad", "angry", "calm", "neutral") },
-                { "distraction", new JArray("calm", "neutral", "surprised", "happy") },
-                { "disagreement_with_facts", new JArray("angry", "fearful", "calm", "neutral") },
-                { "shifting_blame", new JArray("angry", "fearful", "sad", "neutral") },
-                { "pretending_illness", new JArray("sad", "fearful", "neutral") },
-                { "playing_on_sympathy", new JArray("sad", "fearful", "calm") }
-            };
+        // Новые пресеты для распознавания лжи
+        {"denial_of_involvement",
+         new JArray("fearful", "angry", "disgust", "neutral")},
+        {"covering_for_an_accomplice",
+         new JArray("calm", "neutral", "fearful", "surprised")},
+        {"justification_of_actions",
+         new JArray("sad", "angry", "calm", "neutral")},
+        {"distraction", new JArray("calm", "neutral", "surprised", "happy")},
+        {"disagreement_with_facts",
+         new JArray("angry", "fearful", "calm", "neutral")},
+        {"shifting_blame", new JArray("angry", "fearful", "sad", "neutral")},
+        {"pretending_illness", new JArray("sad", "fearful", "neutral")},
+        {"playing_on_sympathy", new JArray("sad", "fearful", "calm")}};
 
             UpdateStatistics();
         }
@@ -102,7 +84,8 @@ namespace VoiceMood_Trainer
         private string? selectedPresetKey;
 
         // Обработчик события для ComboBox
-        private void PresetComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void PresetComboBox_SelectionChanged(object sender,
+                                                     SelectionChangedEventArgs e)
         {
             var selectedItem = (ComboBoxItem)e.AddedItems[0];
             selectedPresetKey = (string)selectedItem.Tag;
@@ -150,21 +133,27 @@ namespace VoiceMood_Trainer
         {
             if (isTestRunning && currentFileIndex < files_to_play.Count)
             {
-                PlayAudioFile(files_to_play[currentFileIndex]["path"]!.ToString());
+                PlayAudioFile(files_to_play[currentFileIndex]
+                              ["path"]!.ToString());
                 EmotionOptions.IsEnabled = true;
             }
         }
 
         private void SetupTest(string presetKey)
         {
-            var emotionsToTest = ravdessData["presets"][presetKey].ToObject<List<string>>();
+            var emotionsToTest = ravdessData["presets"]
+                                 [presetKey]
+                                     .ToObject<List<string>>();
             files_to_play = new List<JObject>();
 
-            foreach (var actor in ravdessData["actors"].Children())
+            foreach (var actor in ravdessData["actors"]
+                         .Children())
             {
-                var actorFiles = actor.First.Children<JObject>()
-                    .Where(file => emotionsToTest.Contains(file["emotion"].ToString()))
-                    .ToList();
+                var actorFiles =
+                    actor.First.Children<JObject>()
+                        .Where(file => emotionsToTest.Contains(file["emotion"]
+                                                                   .ToString()))
+                        .ToList();
                 files_to_play.AddRange(actorFiles);
             }
 
@@ -174,7 +163,8 @@ namespace VoiceMood_Trainer
             IncorrectAnswersText.Text = "0";
 
             // Перемешиваем файлы
-            files_to_play = files_to_play.OrderBy(x => random.Next()).Take(100).ToList();
+            files_to_play =
+                files_to_play.OrderBy(x => random.Next()).Take(100).ToList();
 
             UpdateEmotionButtons(emotionsToTest);
 
@@ -183,30 +173,24 @@ namespace VoiceMood_Trainer
         private void UpdateEmotionButtons(List<string> emotions)
         {
             EmotionOptions.Children.Clear();
-            var emotionTranslations = new Dictionary<string, string>
-    {
-        { "neutral", "Нейтральная" },
-        { "calm", "Спокойная" },
-        { "happy", "Радостная" },
-        { "sad", "Грустная" },
-        { "angry", "Злая" },
-        { "fearful", "Испуганная" },
-        { "disgust", "Отвращение" },
-        { "surprised", "Удивленная" }
-    };
-
+            var emotionTranslations = new Dictionary<string, string>{
+{"neutral", "🤐 Нейтральная"}, {"calm", "😌 Спокойная"},
+{"happy", "😊 Радостная"},     {"sad", "😔 Грустная"},
+{"angry", "😠 Злая"},          {"fearful", "😨 Испуганная"},
+{"disgust", "🤢 Отвращение"},  {"surprised", "😲 Удивленная"}};
             // Создаем кнопки для каждой эмоции
             foreach (var emotion in emotions)
             {
-                var translatedEmotion = emotionTranslations.ContainsKey(emotion) ? emotionTranslations[emotion] : emotion; // Перевод, если есть
-
+                var translatedEmotion = emotionTranslations.ContainsKey(emotion)
+                                            ? emotionTranslations[emotion]
+                                            : emotion;  // Перевод, если есть
                 var button = new Button
                 {
                     Content = translatedEmotion,
                     Tag = emotion,
-                    Height = 50,        // Устанавливаем высоту кнопки
-                    Width = 150,        // Устанавливаем ширину кнопки
-                    Margin = new Thickness(5) // Добавляем отступ
+                    Height = 50,  // Устанавливаем высоту кнопки
+                    Width = 150,  // Устанавливаем ширину кнопки
+                    Margin = new Thickness(5)  // Добавляем отступ
                 };
                 button.Click += EmotionButton_Click;
                 EmotionOptions.Children.Add(button);
@@ -220,17 +204,22 @@ namespace VoiceMood_Trainer
             {
                 var currentFile = files_to_play[currentFileIndex];
                 string filePath = currentFile["path"]!.ToString();
-                currentCorrectEmotion = currentFile["emotion"]?.ToString();
+                currentCorrectEmotion = currentFile["emotion"]?
+                                            .ToString();
 
                 // Play audio
                 PlayAudioFile(filePath);
 
                 // Обновляем кнопки с эмоциями
-                var currentEmotions = files_to_play.Select(f => f["emotion"].ToString()).Distinct().ToList();
+                var currentEmotions = files_to_play
+                                          .Select(f => f["emotion"]
+                                                           .ToString())
+                                          .Distinct()
+                                          .ToList();
                 UpdateEmotionButtons(currentEmotions);
 
-                RepeatButton.IsEnabled = true; // Enable the repeat button
-                EmotionOptions.IsEnabled = true; // Активировать кнопки выбора эмоций
+                RepeatButton.IsEnabled = true;  // Enable the repeat button
+                EmotionOptions.IsEnabled = true;  // Активировать кнопки выбора эмоций
             }
             else
             {
@@ -239,17 +228,17 @@ namespace VoiceMood_Trainer
                 StartButton.IsEnabled = true;
                 StopButton.IsEnabled = false;
                 NextButton.IsEnabled = false;
-                RepeatButton.IsEnabled = false; // Disable the repeat button
+                RepeatButton.IsEnabled = false;  // Disable the repeat button
                 StatusText.Text = "Тест завершен";
-                MessageBox.Show($"Тест завершен! Правильных ответов: {correctAnswers} из {files_to_play.Count}");
+                MessageBox.Show(
+                    $"Тест завершен! Правильных ответов: {correctAnswers} из {files_to_play.Count}");
             }
         }
 
-
         private void PlayAudioFile(string filePath)
         {
-            using (var audioFile = new AudioFileReader(filePath))
-            using (var outputDevice = new WaveOutEvent())
+            using (var audioFile = new AudioFileReader(filePath)) using (
+                var outputDevice = new WaveOutEvent())
             {
                 outputDevice.Init(audioFile);
                 outputDevice.Play();
@@ -261,17 +250,11 @@ namespace VoiceMood_Trainer
         }
         private string GetTranslatedEmotion(string emotion)
         {
-            var emotionTranslations = new Dictionary<string, string>
-            {
-               { "neutral", "Нейтральная" },
-                { "calm", "Спокойная" },
-                { "happy", "Радостная" },
-                { "sad", "Грустная" },
-                { "angry", "Злая" },
-                { "fearful", "Испуганная" },
-                { "disgust", "Отвращение" },
-                { "surprised", "Удивленная" }
-            };
+            var emotionTranslations = new Dictionary<string, string>{
+        {"neutral", "Нейтральная"}, {"calm", "Спокойная"},
+        {"happy", "Радостная"},     {"sad", "Грустная"},
+        {"angry", "Злая"},          {"fearful", "Испуганная"},
+        {"disgust", "Отвращение"},  {"surprised", "Удивленная"}};
 
             if (emotionTranslations.ContainsKey(emotion))
             {
@@ -285,7 +268,9 @@ namespace VoiceMood_Trainer
         private void EmotionButton_Click(object sender, RoutedEventArgs e)
         {
             var selectedEmotion = ((Button)sender).Tag.ToString();
-            var correctEmotion = files_to_play[currentFileIndex]["emotion"].ToString();
+            var correctEmotion = files_to_play[currentFileIndex]
+                                 ["emotion"]
+                                     .ToString();
 
             if (selectedEmotion == correctEmotion)
             {
@@ -298,12 +283,14 @@ namespace VoiceMood_Trainer
             {
                 incorrectAnswers++;
                 IncorrectAnswersText.Text = incorrectAnswers.ToString();
-                FeedbackText.Text = $"❌ Неправильно! Верный ответ: {GetTranslatedEmotion(correctEmotion)}"; // Перевод эмоции
+                FeedbackText.Text =
+                    $"❌ Неправильно! Верный ответ: {GetTranslatedEmotion(correctEmotion)}";  // Перевод эмоции
                 FeedbackText.Foreground = Brushes.Red;
             }
 
             ScoreText.Text = $"Счет: {correctAnswers}/{files_to_play.Count}";
-            ProgressBar.Value = (double)(currentFileIndex + 1) / files_to_play.Count * 100;
+            ProgressBar.Value =
+                (double)(currentFileIndex + 1) / files_to_play.Count * 100;
 
             EmotionOptions.IsEnabled = false;
             NextButton.IsEnabled = true;
