@@ -196,17 +196,16 @@ public partial class MainWindow : Window {
         }
     }
 
-    private void PlayNextAudio() {
+    private async void PlayNextAudio() {
         if (!isTestRunning) return;
 
         if (currentFileIndex < files_to_play.Count) {
             var currentFile = files_to_play[currentFileIndex];
             string filePath = currentFile["path"]!.ToString();
-            currentCorrectEmotion = currentFile["emotion"]?
-                                    .ToString();
+            currentCorrectEmotion = currentFile["emotion"]?.ToString();
 
-            // Play audio
-            PlayAudioFile(filePath);
+            // Play audio asynchronously
+            await Task.Run(() => PlayAudioFile(filePath));
 
             // Обновляем кнопки с эмоциями
             var currentEmotions = files_to_play
@@ -226,21 +225,23 @@ public partial class MainWindow : Window {
             NextButton.IsEnabled = false;
             RepeatButton.IsEnabled = false;  // Disable the repeat button
             StatusText.Text = "Тест завершен";
-            MessageBox.Show(
-                $"Тест завершен! Правильных ответов: {correctAnswers} из {files_to_play.Count}");
+            MessageBox.Show($"Тест завершен! Правильных ответов: {correctAnswers} из {files_to_play.Count}");
         }
     }
 
-    private void PlayAudioFile(string filePath) {
-        using (var audioFile = new AudioFileReader(filePath)) using (
-                var outputDevice = new WaveOutEvent()) {
+
+    private async void PlayAudioFile(string filePath) {
+        using (var audioFile = new AudioFileReader(filePath))
+            using (var outputDevice = new WaveOutEvent()) {
                 outputDevice.Init(audioFile);
                 outputDevice.Play();
+
                 while (outputDevice.PlaybackState == PlaybackState.Playing) {
-                    System.Threading.Thread.Sleep(100);
+                    await Task.Delay(100);
                 }
             }
     }
+
 
     private string GetTranslatedEmotion(string emotion) {
         var emotionTranslations = new Dictionary<string, string> {
