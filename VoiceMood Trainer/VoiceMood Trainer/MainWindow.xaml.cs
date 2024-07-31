@@ -20,6 +20,10 @@ public partial class MainWindow : Window {
     private int loadedFiles;
     private int numberOfActors;
     private int numberOfEmotions;
+    private string? selectedPresetKey;
+
+
+
     public MainWindow() {
         InitializeComponent();
         LoadRavdessData();
@@ -83,13 +87,14 @@ public partial class MainWindow : Window {
 
         UpdateStatistics();
     }
+
     private void UpdateStatistics() {
         LoadedFilesText.Text = $"Загружено файлов: {loadedFiles}";
         ActorsCountText.Text = $"Количество актеров: {numberOfActors}";
         EmotionsCountText.Text = $"Количество эмоций: {numberOfEmotions}";
         TotalFilesText.Text = $"Общее количество файлов: {totalFiles}";
     }
-    private string? selectedPresetKey;
+
 
     // Обработчик события для ComboBox
     private void PresetComboBox_SelectionChanged(object sender,
@@ -97,6 +102,7 @@ public partial class MainWindow : Window {
         var selectedItem = (ComboBoxItem)e.AddedItems[0];
         selectedPresetKey = (string)selectedItem.Tag;
     }
+
     private void StartButton_Click(object sender, RoutedEventArgs e) {
         if (selectedPresetKey != null) {
             SetupTest(selectedPresetKey);
@@ -167,6 +173,7 @@ public partial class MainWindow : Window {
 
         PlayNextAudio();
     }
+
     private void UpdateEmotionButtons(List<string> emotions) {
         EmotionOptions.Children.Clear();
         var emotionTranslations = new Dictionary<string, string> {
@@ -191,6 +198,7 @@ public partial class MainWindow : Window {
             EmotionOptions.Children.Add(button);
         }
     }
+
     private void PlayNextAudio() {
         if (!isTestRunning) return;
 
@@ -236,6 +244,7 @@ public partial class MainWindow : Window {
                 }
             }
     }
+
     private string GetTranslatedEmotion(string emotion) {
         var emotionTranslations = new Dictionary<string, string> {
             {"neutral", "Нейтральная"}, {"calm", "Спокойная"},
@@ -250,6 +259,7 @@ public partial class MainWindow : Window {
             return emotion;
         }
     }
+
     private void EmotionButton_Click(object sender, RoutedEventArgs e) {
         var selectedEmotion = ((Button)sender).Tag.ToString();
         var correctEmotion = files_to_play[currentFileIndex]
