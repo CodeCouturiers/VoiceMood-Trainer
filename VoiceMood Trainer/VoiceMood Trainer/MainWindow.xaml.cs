@@ -23,6 +23,7 @@ namespace VoiceMood_Trainer
         private int numberOfEmotions;
         private string? selectedPresetKey;
         private float speedUpFactor = 1.0f;
+        private bool areSoundEffectsEnabled = true;
 
         public MainWindow()
         {
@@ -42,7 +43,16 @@ namespace VoiceMood_Trainer
             {
                 SpeedValueText.Text = "1.0x";
             }
+
+            SoundEffectsCheckBox.IsChecked = areSoundEffectsEnabled;
+            SoundEffectsCheckBox.Checked += SoundEffectsCheckBox_CheckedChanged;
+            SoundEffectsCheckBox.Unchecked += SoundEffectsCheckBox_CheckedChanged;
         }
+        private void SoundEffectsCheckBox_CheckedChanged(object sender, RoutedEventArgs e)
+        {
+            areSoundEffectsEnabled = SoundEffectsCheckBox.IsChecked ?? false;
+        }
+
 
         private void LanguageComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -403,6 +413,8 @@ namespace VoiceMood_Trainer
                 CorrectAnswersText.Text = correctAnswers.ToString();
                 FeedbackText.Text = LocalizationManager.Instance.GetString("CorrectAnswer");
                 FeedbackText.Foreground = System.Windows.Media.Brushes.Green;
+                EmotionResourcesManager.PlayCorrectSound(areSoundEffectsEnabled);
+
             }
             else
             {
@@ -411,6 +423,8 @@ namespace VoiceMood_Trainer
                 FeedbackText.Text = string.Format(LocalizationManager.Instance.GetString("IncorrectAnswerMessage"),
                                                   GetTranslatedEmotion(correctEmotion ?? ""));
                 FeedbackText.Foreground = System.Windows.Media.Brushes.Red;
+                EmotionResourcesManager.PlayIncorrectSound(areSoundEffectsEnabled);
+
             }
 
             ScoreText.Text = string.Format(LocalizationManager.Instance.GetString("ScoreFormat"), correctAnswers,

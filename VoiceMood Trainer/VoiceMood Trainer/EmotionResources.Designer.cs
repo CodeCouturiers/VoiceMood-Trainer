@@ -8,11 +8,10 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace VoiceMood_Trainer
-{
+namespace VoiceMood_Trainer {
     using System;
-
-
+    
+    
     /// <summary>
     ///   Класс ресурса со строгой типизацией для поиска локализованных строк и т.д.
     /// </summary>
@@ -20,307 +19,279 @@ namespace VoiceMood_Trainer
     // с помощью такого средства, как ResGen или Visual Studio.
     // Чтобы добавить или удалить член, измените файл .ResX и снова запустите ResGen
     // с параметром /str или перестройте свой проект VS.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder",
-            "17.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class EmotionResources
-    {
-
+    internal class EmotionResources {
+        
         private static global::System.Resources.ResourceManager resourceMan;
-
+        
         private static global::System.Globalization.CultureInfo resourceCulture;
-
-        [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance",
-                "CA1811:AvoidUncalledPrivateCode")]
-        internal EmotionResources()
-        {
+        
+        [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+        internal EmotionResources() {
         }
-
+        
         /// <summary>
         ///   Возвращает кэшированный экземпляр ResourceManager, использованный этим классом.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager
-        {
-            get
-            {
-                if (object.ReferenceEquals(resourceMan, null))
-                {
-                    global::System.Resources.ResourceManager temp = new
-                    global::System.Resources.ResourceManager("VoiceMood_Trainer.EmotionResources", typeof(EmotionResources).Assembly);
+        internal static global::System.Resources.ResourceManager ResourceManager {
+            get {
+                if (object.ReferenceEquals(resourceMan, null)) {
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("VoiceMood_Trainer.EmotionResources", typeof(EmotionResources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
             }
         }
-
+        
         /// <summary>
         ///   Перезаписывает свойство CurrentUICulture текущего потока для всех
         ///   обращений к ресурсу с помощью этого класса ресурса со строгой типизацией.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture
-        {
-            get
-            {
+        internal static global::System.Globalization.CultureInfo Culture {
+            get {
                 return resourceCulture;
             }
-            set
-            {
+            set {
                 resourceCulture = value;
             }
         }
-
+        
         /// <summary>
-        ///   Ищет локализованную строку, похожую на #FFFF00D06A.
+        ///   Ищет локализованную строку, похожую на #FF00D06A.
         /// </summary>
-        internal static string angry_Color
-        {
-            get
-            {
+        internal static string angry_Color {
+            get {
                 return ResourceManager.GetString("angry_Color", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Ищет локализованную строку, похожую на M15.999 29.998c9.334 0 13.999-6.268 13.999-14 0-7.73-4.665-13.998-14-13.998C6.665 2 2 8.268 2 15.999s4.664 13.999 13.999 13.999 M10.5 21a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9 M21.5 21a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9 M14.29 12.501a.75.75 0 0 1-.08 1.498c-1.017-.054-1.989-.304-2.817-.88-.835-.582-1.46-1.452-1.854-2.631a.75.75 0 1 1 1.422-.476c.31.928.762 1.509 1.29 1.876.534.372 1.21.569 2.039.613 M17.71 12.501a.75.75 0 0 0 .08 1.498c1.017-.054 1.989-.304 2.817-.88.835-.582 1.46-1.452 1.854-2.631a.75.75 0 1 [остаток строки не уместился]&quot;;.
         /// </summary>
-        internal static string angry_SVGPath
-        {
-            get
-            {
+        internal static string angry_SVGPath {
+            get {
                 return ResourceManager.GetString("angry_SVGPath", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Ищет локализованную строку, похожую на Злая.
         /// </summary>
-        internal static string angry_Text
-        {
-            get
-            {
+        internal static string angry_Text {
+            get {
                 return ResourceManager.GetString("angry_Text", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Ищет локализованную строку, похожую на #FFFFB02E.
         /// </summary>
-        internal static string calm_Color
-        {
-            get
-            {
+        internal static string calm_Color {
+            get {
                 return ResourceManager.GetString("calm_Color", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Ищет локализованную строку, похожую на M15.999 29.998c9.334 0 13.999-6.268 13.999-14 0-7.73-4.665-13.998-14-13.998C6.665 2 2 8.268 2 15.999s4.664 13.999 13.999 13.999 M6.974 10.658c.144-.43.502-1.108 1.095-1.67C8.654 8.433 9.452 8 10.5 8a.5.5 0 1 0 0-1c-1.352 0-2.387.567-3.12 1.262-.723.688-1.164 1.51-1.354 2.08a.5.5 0 1 0 .948.316 M25.026 10.658c-.144-.43-.502-1.108-1.095-1.67C23.346 8.433 22.548 8 21.5 8a.5.5 0 0 1 0-1c1.352 0 2.387.567 3.12 1.262.723.688 1.165 1.51 1.354 2.08a.5.5 0 0 1-.948.316 M7.707 16.293a1 1 0 0 0-1.414 1.414C6.818 18.23 [остаток строки не уместился]&quot;;.
         /// </summary>
-        internal static string calm_SVGPath
-        {
-            get
-            {
+        internal static string calm_SVGPath {
+            get {
                 return ResourceManager.GetString("calm_SVGPath", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Ищет локализованную строку, похожую на Спокойная.
         /// </summary>
-        internal static string calm_Text
-        {
-            get
-            {
+        internal static string calm_Text {
+            get {
                 return ResourceManager.GetString("calm_Text", resourceCulture);
             }
         }
-
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Byte[].
+        /// </summary>
+        internal static byte[] correct {
+            get {
+                object obj = ResourceManager.GetObject("correct", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
         /// <summary>
         ///   Ищет локализованную строку, похожую на #FF00D26A.
         /// </summary>
-        internal static string disgust_Color
-        {
-            get
-            {
+        internal static string disgust_Color {
+            get {
                 return ResourceManager.GetString("disgust_Color", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Ищет локализованную строку, похожую на M15.999 29.998c9.334 0 13.999-6.268 13.999-14 0-7.73-4.665-13.998-14-13.998C6.665 2 2 8.268 2 15.999s4.664 13.999 13.999 13.999 M10.5 19a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9 M21.5 19a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9 M10.988 5.61a.5.5 0 1 0-.976-.22c-.238 1.063-.801 1.7-1.447 2.082C7.904 7.864 7.133 8 6.5 8a.5.5 0 1 0 0 1c.757 0 1.718-.16 2.574-.667.872-.516 1.613-1.38 1.914-2.724 M21.012 5.61a.5.5 0 1 1 .976-.22c.238 1.063.801 1.7 1.447 2.082.661.392 1.432.528 2.065.528a.5.5 0 0 1 0 1c-.757 0-1.718-.16-2. [остаток строки не уместился]&quot;;.
         /// </summary>
-        internal static string disgust_SVGPath
-        {
-            get
-            {
+        internal static string disgust_SVGPath {
+            get {
                 return ResourceManager.GetString("disgust_SVGPath", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Ищет локализованную строку, похожую на Отвращение.
         /// </summary>
-        internal static string disgust_Text
-        {
-            get
-            {
+        internal static string disgust_Text {
+            get {
                 return ResourceManager.GetString("disgust_Text", resourceCulture);
             }
         }
-
+        
         /// <summary>
-        ///   Ищет локализованную строку, похожую на h-1.145 0-1.92-.333-2.452-.8 M14 14a2 2 0 1 1-4 0 2 2 0 0 1 4 0 M22 14a2 2 0 1 1-4 0 2 2 0 0 1 4 0 M22.718 24.026c.31 1.06-.615 1.974-1.72 1.974h-9.997c-1.105 0-2.03-.914-1.719-1.974a7.003 7.003 0 0 1 13.436 0.
+        ///   Ищет локализованную строку, похожую на #FFFFB02E.
         /// </summary>
-        internal static string fearful_SVGPath
-        {
-            get
-            {
+        internal static string fearful_Color {
+            get {
+                return ResourceManager.GetString("fearful_Color", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на M29.998 15.999c0 7.731-4.665 13.999-14 13.999C6.665 29.998 2 23.73 2 15.998Q2 14.98 2.108 14l13.89-6 13.892 6q.108.98.108 1.999 M29.89 14c-.747-6.785-5.376-12-13.891-12S2.855 7.215 2.108 14z M10.5 18a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9 M21.5 18a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9 M8.952 7.2c.54-.475.875-1.127 1.065-1.83a.5.5 0 0 1 .966.26c-.225.831-.64 1.68-1.371 2.321C8.873 8.6 7.855 9 6.5 9a.5.5 0 1 1 0-1c1.145 0 1.92-.333 2.452-.8 M23.048 7.2c-.54-.475-.875-1.127-1.065-1.83a.5.5 0 0 0-.966.26c.225.831.64 [остаток строки не уместился]&quot;;.
+        /// </summary>
+        internal static string fearful_SVGPath {
+            get {
                 return ResourceManager.GetString("fearful_SVGPath", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Ищет локализованную строку, похожую на Испуганная.
         /// </summary>
-        internal static string fearful_Text
-        {
-            get
-            {
+        internal static string fearful_Text {
+            get {
                 return ResourceManager.GetString("fearful_Text", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Ищет локализованную строку, похожую на #FFFFB02E.
         /// </summary>
-        internal static string happy_Color
-        {
-            get
-            {
+        internal static string happy_Color {
+            get {
                 return ResourceManager.GetString("happy_Color", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Ищет локализованную строку, похожую на M15.999 29.998c9.334 0 13.999-6.268 13.999-14 0-7.73-4.665-13.998-14-13.998C6.665 2 2 8.268 2 15.999s4.664 13.999 13.999 13.999 M11 16c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2 M27 16c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2 M8.982 12.19c.048-.246.158-.55.367-.777.18-.196.498-.413 1.15-.413.643 0 .97.222 1.158.429.218.24.323.545.358.742a1 1 0 0 0 1.97-.342 3.54 3.54 0 0 0-.85-1.747C12.563 9.452 11.696 9 10.5 9c-1.184 0-2.047.431-2.624 1.06-.548.596-.769 1.293-.858 1.75a1 1 0 1 0 1 [остаток строки не уместился]&quot;;.
         /// </summary>
-        internal static string happy_SVGPath
-        {
-            get
-            {
+        internal static string happy_SVGPath {
+            get {
                 return ResourceManager.GetString("happy_SVGPath", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Ищет локализованную строку, похожую на Радостная.
         /// </summary>
-        internal static string happy_Text
-        {
-            get
-            {
+        internal static string happy_Text {
+            get {
                 return ResourceManager.GetString("happy_Text", resourceCulture);
             }
         }
-
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Byte[].
+        /// </summary>
+        internal static byte[] incorrect {
+            get {
+                object obj = ResourceManager.GetObject("incorrect", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
         /// <summary>
         ///   Ищет локализованную строку, похожую на #FFFFB02E.
         /// </summary>
-        internal static string neutral_Color
-        {
-            get
-            {
+        internal static string neutral_Color {
+            get {
                 return ResourceManager.GetString("neutral_Color", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Ищет локализованную строку, похожую на M15.999 29.998c9.334 0 13.999-6.268 13.999-14 0-7.73-4.665-13.998-14-13.998C6.665 2 2 8.268 2 15.999s4.664 13.999 13.999 13.999 M10.5 16a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9 M21.5 16a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9 M12.5 11.5a2 2 0 1 1-4 0 2 2 0 0 1 4 0 M23.5 11.5a2 2 0 1 1-4 0 2 2 0 0 1 4 0 M8.25 18C7.56 18 7 18.56 7 19.25V22h2.5v.75a1.25 1.25 0 1 0 2.5 0V22h2.5v.75a1.25 1.25 0 1 0 2.5 0V22h2.5v.75a1.25 1.25 0 1 0 2.5 0V22h1.314a2.11 2.11 0 0 0 .196 2.483l2.419 2.789a2.107 2.107 0 0 0 3.077.117l.382-.38 [остаток строки не уместился]&quot;;.
         /// </summary>
-        internal static string neutral_SVGPath
-        {
-            get
-            {
+        internal static string neutral_SVGPath {
+            get {
                 return ResourceManager.GetString("neutral_SVGPath", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Ищет локализованную строку, похожую на Нейтральная.
         /// </summary>
-        internal static string neutral_Text
-        {
-            get
-            {
+        internal static string neutral_Text {
+            get {
                 return ResourceManager.GetString("neutral_Text", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Ищет локализованную строку, похожую на #FFFFB02E.
         /// </summary>
-        internal static string sad_Color
-        {
-            get
-            {
+        internal static string sad_Color {
+            get {
                 return ResourceManager.GetString("sad_Color", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Ищет локализованную строку, похожую на M15.999 29.998c9.334 0 13.999-6.268 13.999-14 0-7.73-4.665-13.998-14-13.998C6.665 2 2 8.268 2 15.999s4.664 13.999 13.999 13.999 M10.985 8.621a.5.5 0 0 0-.97-.242c-.225.9-.665 1.544-1.247 1.967-.585.425-1.35.654-2.268.654a.5.5 0 0 0 0 1c1.083 0 2.067-.271 2.857-.846.793-.577 1.353-1.433 1.628-2.533 M6.293 16.293a1 1 0 0 1 1.414 0C7.85 16.435 8.66 17 10 17s2.15-.565 2.293-.707a1 1 0 0 1 1.414 1.414C13.182 18.232 11.86 19 10 19s-3.182-.768-3.707-1.293a1 1 0 0 1 0-1.414 M18.293 16.293a1 1 0 0 1 1.414 0c.142.142 [остаток строки не уместился]&quot;;.
         /// </summary>
-        internal static string sad_SVGPath
-        {
-            get
-            {
+        internal static string sad_SVGPath {
+            get {
                 return ResourceManager.GetString("sad_SVGPath", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Ищет локализованную строку, похожую на Грустная.
         /// </summary>
-        internal static string sad_Text
-        {
-            get
-            {
+        internal static string sad_Text {
+            get {
                 return ResourceManager.GetString("sad_Text", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Ищет локализованную строку, похожую на #FFFFB02E.
         /// </summary>
-        internal static string surprised_Color
-        {
-            get
-            {
+        internal static string surprised_Color {
+            get {
                 return ResourceManager.GetString("surprised_Color", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Ищет локализованную строку, похожую на M15.999 29.998c9.334 0 13.999-6.268 13.999-14 0-7.73-4.665-13.998-14-13.998C6.665 2 2 8.268 2 15.999s4.664 13.999 13.999 13.999 M10.5 19a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9 M21.5 19a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9 M8.07 7.988c-.594.562-.952 1.24-1.096 1.67a.5.5 0 1 1-.948-.316c.19-.57.63-1.392 1.355-2.08C8.113 6.567 9.148 6 10.5 6a.5.5 0 0 1 0 1c-1.048 0-1.846.433-2.43.988 M12 17a2 2 0 1 0 0-4 2 2 0 0 0 0 4 M20 17a2 2 0 1 0 0-4 2 2 0 0 0 0 4 M25.026 9.658c-.144-.43-.503-1.108-1.095-1.67C23.346 7.433 22. [остаток строки не уместился]&quot;;.
         /// </summary>
-        internal static string surprised_SVGPath
-        {
-            get
-            {
+        internal static string surprised_SVGPath {
+            get {
                 return ResourceManager.GetString("surprised_SVGPath", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Ищет локализованную строку, похожую на Удивленная.
         /// </summary>
-        internal static string surprised_Text
-        {
-            get
-            {
+        internal static string surprised_Text {
+            get {
                 return ResourceManager.GetString("surprised_Text", resourceCulture);
             }
         }

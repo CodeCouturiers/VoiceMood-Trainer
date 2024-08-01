@@ -1,15 +1,25 @@
 ﻿using System.Drawing;
 using System.Globalization;
+using System.IO;
 using System.Resources;
+using System.Windows;
+using NAudio.Wave;
 
 namespace VoiceMood_Trainer
 {
     public static class EmotionResourcesManager
     {
         private static readonly ResourceManager ResourceManager;
+        private static IWavePlayer? correctSoundPlayer;
+        private static IWavePlayer? incorrectSoundPlayer;
+        private static WaveStream? correctSoundStream;
+        private static WaveStream? incorrectSoundStream;
+
 
         static EmotionResourcesManager()
         {
+            InitializeSounds();
+
             ResourceManager = new ResourceManager("VoiceMood_Trainer.EmotionResources", typeof(EmotionResourcesManager).Assembly);
         }
 
@@ -23,10 +33,53 @@ namespace VoiceMood_Trainer
             return (text, svgPath, color);
         }
 
+        private static void InitializeSounds()
+        {
+            try
+            {
+                var correctStream = new MemoryStream(EmotionResources.correct);
+                var incorrectStream = new MemoryStream(EmotionResources.incorrect);
+
+                var correctMp3Reader = new Mp3FileReader(correctStream);
+                var incorrectMp3Reader = new Mp3FileReader(incorrectStream);
+
+                correctSoundStream = WaveFormatConversionStream.CreatePcmStream(correctMp3Reader);
+                incorrectSoundStream = WaveFormatConversionStream.CreatePcmStream(incorrectMp3Reader);
+
+                correctSoundPlayer = new WaveOutEvent();
+                incorrectSoundPlayer = new WaveOutEvent();
+
+                correctSoundPlayer.Init(correctSoundStream);
+                incorrectSoundPlayer.Init(incorrectSoundStream);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading sound files: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
         private static string GetString(string key)
         {
             return ResourceManager.GetString(key, CultureInfo.CurrentUICulture) ?? string.Empty;
         }
-    }
 
+        public static void PlayCorrectSound(bool enabled)
+        {
+            if (enabled && correctSoundStream != null && correctSoundPlayer != null)
+            {
+                correctSoundStream.Position = 0;
+                correctSoundPlayer.Play();
+            }
+        }
+
+        public static void PlayIncorrectSound(bool enabled)
+        {
+            if (enabled && incorrectSoundStream != null && incorrectSoundPlayer != null)
+            {
+                incorrectSoundStream.Position = 0;
+                incorrectSoundPlayer.Play();
+            }
+        }
+
+    }
 }
