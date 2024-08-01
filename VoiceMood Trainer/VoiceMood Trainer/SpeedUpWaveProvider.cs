@@ -13,7 +13,6 @@ namespace VoiceMood_Trainer
             _soundTouchProvider = new SoundTouchWaveProvider(sourceStream);
             _soundTouchProvider.Tempo = speedRatio;
 
-            // Оптимизация для речи
             _soundTouchProvider.OptimizeForSpeech();
 
         }

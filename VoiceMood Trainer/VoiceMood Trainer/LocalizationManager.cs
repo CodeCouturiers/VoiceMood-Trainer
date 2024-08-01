@@ -3,10 +3,9 @@ using System.IO;
 using System.Windows;
 namespace VoiceMood_Trainer
 {
-
     public class LocalizationManager
     {
-        private static LocalizationManager _instance;
+        private static LocalizationManager? _instance;
         private Dictionary<string, Dictionary<string, string>> _languages;
         private string _currentLanguage;
 
@@ -26,7 +25,7 @@ namespace VoiceMood_Trainer
         {
             _languages = new Dictionary<string, Dictionary<string, string>>();
             LoadLanguages();
-            _currentLanguage = "en"; // По умолчанию английский
+            _currentLanguage = "en";
         }
 
         private void LoadLanguages()
@@ -37,7 +36,15 @@ namespace VoiceMood_Trainer
                 string langCode = Path.GetFileNameWithoutExtension(file);
                 string json = File.ReadAllText(file);
                 var langDict = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
-                _languages[langCode] = langDict;
+
+                if (langDict != null)
+                {
+                    _languages[langCode] = langDict;
+                }
+                else
+                {
+                    Console.WriteLine($"Warning: Could not deserialize language file {file}.");
+                }
             }
         }
 
@@ -60,7 +67,7 @@ namespace VoiceMood_Trainer
             {
                 return _languages[_currentLanguage][key];
             }
-            return key; // Возвращаем ключ, если перевод не найден
+            return key;
         }
 
         public List<string> GetAvailableLanguages()

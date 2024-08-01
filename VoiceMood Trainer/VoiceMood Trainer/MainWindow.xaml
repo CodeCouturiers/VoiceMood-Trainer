@@ -149,7 +149,10 @@
             <TextBlock x:Name="CorrectAnswersText" Text="0" FontSize="16" Margin="0,0,10,0" />
             <TextBlock Text="{DynamicResource Incorrect}" FontSize="16" Margin="0,0,5,0" />
             <TextBlock x:Name="IncorrectAnswersText" Text="0" FontSize="16" />
+
         </StackPanel>
+        <Button Grid.Column="0" x:Name="ProgressionModeButton" Content="Switch to Progression Mode" 
+                    Width="200" Height="40" HorizontalAlignment="Left" Click="ProgressionModeButton_Click"/>
 
         <ComboBox x:Name="LanguageComboBox" Grid.Row="6" HorizontalAlignment="Right" Width="100" SelectionChanged="LanguageComboBox_SelectionChanged"/>
     </Grid>

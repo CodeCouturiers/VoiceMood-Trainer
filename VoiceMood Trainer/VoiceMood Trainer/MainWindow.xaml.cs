@@ -420,5 +420,48 @@ namespace VoiceMood_Trainer
             EmotionOptions.IsEnabled = false;
             NextButton.IsEnabled = true;
         }
+
+        private void ProgressionModeButton_Click(object sender, RoutedEventArgs e)
+        {
+            var progressionModeWindow = new ProgressionModeWindow(this);
+            progressionModeWindow.ShowDialog();
+        }
+
+        public List<string> GetAllEmotions()
+        {
+            return ravdessData["presets"]?["all_emotions"]?.ToObject<List<string>>() ?? new List<string>();
+        }
+
+        public void SetupProgressionTest(List<string> emotions)
+        {
+            selectedAudioFiles = new List<JObject>();
+
+            foreach (var actor in ravdessData["actors"]?.Children() ?? Enumerable.Empty<JToken>())
+            {
+                var actorFiles = actor.First?.Children<JObject>()
+                                 .Where(file => file["emotion"] != null && emotions.Contains(file["emotion"].ToString()))
+                                 .ToList() ?? new List<JObject>();
+                selectedAudioFiles.AddRange(actorFiles);
+            }
+
+            currentFileIndex = 0;
+            correctAnswers = 0;
+            incorrectAnswers = 0;
+            CorrectAnswersText.Text = "0";
+            IncorrectAnswersText.Text = "0";
+
+            selectedAudioFiles = selectedAudioFiles.OrderBy(x => random.Next()).Take(100).ToList();
+
+            UpdateEmotionButtons(emotions);
+
+            isTestRunning = true;
+            StartButton.IsEnabled = false;
+            StopButton.IsEnabled = true;
+            NextButton.IsEnabled = false;
+            RepeatButton.IsEnabled = false;
+            StatusText.Text = LocalizationManager.Instance.GetString("TestStarted");
+
+            PlayNextAudio();
+        }
     }
 }
