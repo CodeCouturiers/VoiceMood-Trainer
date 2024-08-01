@@ -15,6 +15,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="SoundTouch.Net">
+      <HintPath>..\..\..\..\Downloads\rmeasd\soundtouch.net\src\SoundTouch.Net.NAudioSupport\bin\Debug\net8.0\SoundTouch.Net.dll</HintPath>
+    </Reference>
+    <Reference Include="SoundTouch.Net.NAudioSupport">
+      <HintPath>..\..\..\..\Downloads\rmeasd\soundtouch.net\src\SoundTouch.Net.NAudioSupport\bin\Debug\net8.0\SoundTouch.Net.NAudioSupport.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Update="EmotionResources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
