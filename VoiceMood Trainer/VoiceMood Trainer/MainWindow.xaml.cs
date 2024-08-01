@@ -4,74 +4,9 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using Newtonsoft.Json.Linq;
 using NAudio.Wave;
-using System.Resources;
-using System.Drawing;
-using System.Globalization;
-using SoundTouch;
-using SoundTouch.Net.NAudioSupport;
+
 
 namespace VoiceMood_Trainer {
-public class SpeedUpWaveProvider : IWaveProvider, IDisposable {
-    private readonly SoundTouchWaveProvider _soundTouchProvider;
-    private bool _disposed = false;
-
-    public SpeedUpWaveProvider(WaveStream sourceStream, float speedRatio) {
-        _soundTouchProvider = new SoundTouchWaveProvider(sourceStream);
-        _soundTouchProvider.Tempo = speedRatio;
-    }
-
-    public int Read(byte[] buffer, int offset, int count) {
-        return _soundTouchProvider.Read(buffer, offset, count);
-    }
-
-    public WaveFormat WaveFormat => _soundTouchProvider.WaveFormat;
-
-    public void Dispose() {
-        Dispose(true);
-        GC.SuppressFinalize(this);
-    }
-
-    protected virtual void Dispose(bool disposing) {
-        if (!_disposed) {
-            if (disposing) {
-                // Освобождаем управляемые ресурсы
-                if (_soundTouchProvider is IDisposable disposableProvider) {
-                    disposableProvider.Dispose();
-                }
-            }
-
-            // Освобождаем неуправляемые ресурсы (если есть)
-
-            _disposed = true;
-        }
-    }
-
-    ~SpeedUpWaveProvider() {
-        Dispose(false);
-    }
-}
-
-
-public static class EmotionResourcesManager {
-    private static readonly ResourceManager ResourceManager;
-
-    static EmotionResourcesManager() {
-        ResourceManager = new ResourceManager("VoiceMood_Trainer.EmotionResources", typeof(EmotionResourcesManager).Assembly);
-    }
-
-    public static (string text, string svgPath, System.Drawing.Color color) GetEmotionTranslation(string emotion) {
-        string text = GetString(emotion + "_Text");
-        string svgPath = GetString(emotion + "_SVGPath");
-        string colorString = GetString(emotion + "_Color");
-        System.Drawing.Color color = ColorTranslator.FromHtml(colorString);
-
-        return (text, svgPath, color);
-    }
-
-    private static string GetString(string key) {
-        return ResourceManager.GetString(key, CultureInfo.CurrentUICulture) ?? string.Empty;
-    }
-}
 
 public partial class MainWindow : Window {
     private JObject ravdessData = new JObject();
