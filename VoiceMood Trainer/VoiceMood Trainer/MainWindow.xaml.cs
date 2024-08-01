@@ -98,10 +98,25 @@ public partial class MainWindow : Window {
     private int numberOfActors;
     private int numberOfEmotions;
     private string? selectedPresetKey;
+    private float speedUpFactor = 1.0f;
 
     public MainWindow() {
         InitializeComponent();
         LoadRavdessData();
+
+        // Инициализация слайдера скорости и текстового поля
+        if (SpeedSlider != null) {
+            SpeedSlider.Value = 10; // Начальное значение 1.0x
+        }
+        if (SpeedValueText != null) {
+            SpeedValueText.Text = "1.0x";
+        }
+    }
+    private void SpeedSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
+        speedUpFactor = (float)e.NewValue / 10f;
+        if (SpeedValueText != null) {
+            SpeedValueText.Text = $"{speedUpFactor:F1}x";
+        }
     }
 
     private void LoadRavdessData() {
@@ -349,8 +364,6 @@ public partial class MainWindow : Window {
         if (string.IsNullOrEmpty(filePath)) return;
 
         using (var audioFile = new AudioFileReader(filePath)) {
-            var speedUpFactor = 1.0f; // Speed up factor
-
             using (var speedUpProvider = new SpeedUpWaveProvider(audioFile, speedUpFactor))
                 using (var outputDevice = new WaveOutEvent()) {
                     outputDevice.Init(speedUpProvider);
@@ -362,8 +375,6 @@ public partial class MainWindow : Window {
                 }
         }
     }
-
-
 
 
     private string GetTranslatedEmotion(string emotion) {

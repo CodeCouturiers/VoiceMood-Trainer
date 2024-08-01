@@ -1,7 +1,7 @@
 ﻿<Window x:Class="VoiceMood_Trainer.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Тренажер по распознаванию эмоций" Height="600" Width="800"
+        Title="Тренажер по распознаванию эмоций" Height="686" Width="916"
         Background="#202124">
     <Window.Resources>
         <Style TargetType="TextBlock">
@@ -104,6 +104,11 @@
                 </ComboBox>
                 <TextBlock Text="Громкость" Margin="0,0,0,5"/>
                 <Slider x:Name="VolumeSlider" Minimum="0" Maximum="100" Value="100" Margin="0,0,0,10" />
+                <TextBlock Text="Скорость воспроизведения" Margin="0,10,0,5"/>
+                <Slider x:Name="SpeedSlider" Minimum="10" Maximum="50" Value="10" 
+        TickFrequency="1" IsSnapToTickEnabled="True"
+        Margin="0,0,0,10" ValueChanged="SpeedSlider_ValueChanged"/>
+                <TextBlock x:Name="SpeedValueText" Text="1.0x" Margin="0,0,0,10"/>
             </StackPanel>
 
         </Grid>
