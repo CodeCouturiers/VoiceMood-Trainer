@@ -109,10 +109,10 @@
         </Grid>
 
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20,0,0">
-            <Button x:Name="StartButton" Content="🚀 Начать" Width="100" Margin="0,0,10,0" Click="StartButton_Click"/>
-            <Button x:Name="StopButton" Content="🛑 Остановить" Width="100" IsEnabled="False" Margin="0,0,10,0" Click="StopButton_Click"/>
-            <Button x:Name="NextButton" Content="➡️ Далее" Width="100" IsEnabled="False" Margin="0,0,10,0" Click="NextButton_Click"/>
-            <Button x:Name="RepeatButton" Content="🔁 Повторить" Width="100" IsEnabled="False" Click="RepeatButton_Click"/>
+            <Button x:Name="StartButton" Content="🚀 Начать" Width="120" Height="40" Margin="0,0,10,0" Click="StartButton_Click"/>
+            <Button x:Name="StopButton" Content="🛑 Остановить" Width="120" Height="40" IsEnabled="False" Margin="0,0,10,0" Click="StopButton_Click"/>
+            <Button x:Name="NextButton" Content="➡️ Далее" Width="120" Height="40" IsEnabled="False" Margin="0,0,10,0" Click="NextButton_Click"/>
+            <Button x:Name="RepeatButton" Content="🔁 Повторить" Width="120" Height="40" IsEnabled="False" Click="RepeatButton_Click"/>
         </StackPanel>
 
         <ProgressBar Grid.Row="3" x:Name="ProgressBar" Height="20" Margin="0,20,0,10" Background="#303134" Foreground="#8AB4F8"/>
