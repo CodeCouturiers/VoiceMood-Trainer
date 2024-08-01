@@ -4,15 +4,21 @@
         Title="{DynamicResource WindowTitle}" Height="786" Width="916"
         Background="#202124">
     <Window.Resources>
+        <!-- Основной стиль для TextBlock -->
         <Style TargetType="TextBlock">
             <Setter Property="Foreground" Value="#E8EAED"/>
+            <Setter Property="FontFamily" Value="Arial"/>
         </Style>
+        <!-- Основной стиль для Button -->
         <Style TargetType="Button">
             <Setter Property="Background" Value="#8AB4F8"/>
             <Setter Property="Foreground" Value="#202124"/>
             <Setter Property="BorderBrush" Value="#8AB4F8"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
@@ -39,21 +45,27 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <!-- Стиль для ComboBox и ComboBoxItem -->
         <Style TargetType="ComboBox">
             <Setter Property="Background" Value="#303134"/>
             <Setter Property="Foreground" Value="#E8EAED"/>
             <Setter Property="BorderBrush" Value="#5F6368"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontSize" Value="14"/>
         </Style>
         <Style TargetType="ComboBoxItem">
             <Setter Property="Background" Value="#303134"/>
             <Setter Property="Foreground" Value="#E8EAED"/>
         </Style>
+        <!-- Стиль для Slider -->
         <Style TargetType="Slider">
             <Setter Property="Background" Value="#303134"/>
+            <Setter Property="Foreground" Value="#8AB4F8"/>
         </Style>
     </Window.Resources>
 
     <Grid Margin="10">
+        <!-- Определение строк и колонок для сетки -->
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -115,9 +127,9 @@
           IsChecked="True"
           Margin="0,10,0,0"
           Foreground="White"/>
-                
+
                 <Button Content="View Statistics" Click="OpenStatisticsWindow_Click" 
-        Width="120" Height="40"  Margin="0,10,0,0" HorizontalAlignment="Left"/>
+        Width="120" Height="40" Margin="0,10,0,0" HorizontalAlignment="Left"/>
 
             </StackPanel>
 
