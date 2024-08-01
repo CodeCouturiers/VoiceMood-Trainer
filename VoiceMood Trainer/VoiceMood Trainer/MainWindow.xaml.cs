@@ -4,6 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using Newtonsoft.Json.Linq;
 using NAudio.Wave;
+using Newtonsoft.Json;
 
 namespace VoiceMood_Trainer
 {
@@ -24,11 +25,17 @@ namespace VoiceMood_Trainer
         private string? selectedPresetKey;
         private float speedUpFactor = 1.0f;
         private bool areSoundEffectsEnabled = true;
+        private Dictionary<DateTime, List<EmotionStatistics>> statisticsByDate = new
+        Dictionary<DateTime, List<EmotionStatistics>>();
+        private Dictionary<string, (int correct, int incorrect)> currentSessionStatistics = new
+        Dictionary<string, (int correct, int incorrect)>();
 
         public MainWindow()
         {
             InitializeComponent();
             LoadRavdessData();
+            LoadStatisticsFromFile();
+
             foreach (var lang in LocalizationManager.Instance.GetAvailableLanguages())
             {
                 LanguageComboBox.Items.Add(lang);
@@ -187,7 +194,11 @@ namespace VoiceMood_Trainer
                 selectedPresetKey = selectedItem.Tag as string;
             }
         }
-
+        private void OpenStatisticsWindow_Click(object sender, RoutedEventArgs e)
+        {
+            var statisticsWindow = new StatisticsWindow(statisticsByDate);
+            statisticsWindow.Show();
+        }
         private void StartButton_Click(object sender, RoutedEventArgs e)
         {
             if (selectedPresetKey != null)
@@ -402,6 +413,36 @@ namespace VoiceMood_Trainer
             return LocalizationManager.Instance.GetString(emotion);
         }
 
+        private void UpdateStatistics(string emotion, bool isCorrect)
+        {
+            var today = DateTime.Today;
+            if (!statisticsByDate.ContainsKey(today))
+            {
+                statisticsByDate[today] = new List<EmotionStatistics>();
+            }
+
+            var todayStats = statisticsByDate[today];
+            var emotionStat = todayStats.FirstOrDefault(s => s.Emotion == emotion);
+
+            if (emotionStat == null)
+            {
+                emotionStat = new EmotionStatistics(emotion, 0, 0, today);
+                todayStats.Add(emotionStat);
+            }
+
+            if (isCorrect)
+            {
+                emotionStat.CorrectAnswers++;
+            }
+            else
+            {
+                emotionStat.IncorrectAnswers++;
+            }
+
+            SaveStatisticsToFile();
+        }
+
+
         private void EmotionButton_Click(object sender, RoutedEventArgs e)
         {
             var selectedEmotion = ((Button)sender).Tag?.ToString();
@@ -414,7 +455,7 @@ namespace VoiceMood_Trainer
                 FeedbackText.Text = LocalizationManager.Instance.GetString("CorrectAnswer");
                 FeedbackText.Foreground = System.Windows.Media.Brushes.Green;
                 EmotionResourcesManager.PlayCorrectSound(areSoundEffectsEnabled);
-
+                UpdateStatistics(correctEmotion, true);
             }
             else
             {
@@ -424,6 +465,7 @@ namespace VoiceMood_Trainer
                                                   GetTranslatedEmotion(correctEmotion ?? ""));
                 FeedbackText.Foreground = System.Windows.Media.Brushes.Red;
                 EmotionResourcesManager.PlayIncorrectSound(areSoundEffectsEnabled);
+                UpdateStatistics(correctEmotion, false);
 
             }
 
@@ -434,7 +476,20 @@ namespace VoiceMood_Trainer
             EmotionOptions.IsEnabled = false;
             NextButton.IsEnabled = true;
         }
+        private void SaveStatisticsToFile()
+        {
+            string json = JsonConvert.SerializeObject(statisticsByDate);
+            File.WriteAllText("emotion_statistics.json", json);
+        }
 
+        private void LoadStatisticsFromFile()
+        {
+            if (File.Exists("emotion_statistics.json"))
+            {
+                string json = File.ReadAllText("emotion_statistics.json");
+                statisticsByDate = JsonConvert.DeserializeObject<Dictionary<DateTime, List<EmotionStatistics>>>(json);
+            }
+        }
         private void ProgressionModeButton_Click(object sender, RoutedEventArgs e)
         {
             var progressionModeWindow = new ProgressionModeWindow(this);
