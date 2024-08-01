@@ -29,6 +29,7 @@ public partial class MainWindow : Window {
         InitializeComponent();
         LoadRavdessData();
 
+
         // Инициализация слайдера скорости и текстового поля
         if (SpeedSlider != null) {
             SpeedSlider.Value = 10; // Начальное значение 1.0x

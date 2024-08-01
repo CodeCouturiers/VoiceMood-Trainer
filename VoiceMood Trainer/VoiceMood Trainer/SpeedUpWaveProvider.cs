@@ -9,6 +9,10 @@ public class SpeedUpWaveProvider : IWaveProvider, IDisposable {
     public SpeedUpWaveProvider(WaveStream sourceStream, float speedRatio) {
         _soundTouchProvider = new SoundTouchWaveProvider(sourceStream);
         _soundTouchProvider.Tempo = speedRatio;
+
+        // Оптимизация для речи
+        _soundTouchProvider.OptimizeForSpeech();
+
     }
 
     public int Read(byte[] buffer, int offset, int count) {
@@ -25,14 +29,10 @@ public class SpeedUpWaveProvider : IWaveProvider, IDisposable {
     protected virtual void Dispose(bool disposing) {
         if (!_disposed) {
             if (disposing) {
-                // Освобождаем управляемые ресурсы
                 if (_soundTouchProvider is IDisposable disposableProvider) {
                     disposableProvider.Dispose();
                 }
             }
-
-            // Освобождаем неуправляемые ресурсы (если есть)
-
             _disposed = true;
         }
     }
