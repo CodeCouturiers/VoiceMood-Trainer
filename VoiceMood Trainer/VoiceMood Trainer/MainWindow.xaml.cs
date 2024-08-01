@@ -31,6 +31,58 @@ public static class EmotionResourcesManager {
     }
 }
 
+public class SpeedUpWaveProvider : IWaveProvider, IDisposable {
+    private readonly IWaveProvider _sourceProvider;
+    private readonly float _speedFactor;
+    private readonly int _bytesPerSample;
+    private readonly byte[] _buffer;
+    private int _bufferPos;
+    private int _bufferFilled;
+
+    public WaveFormat WaveFormat => _sourceProvider.WaveFormat;
+
+    public SpeedUpWaveProvider(IWaveProvider sourceProvider, float speedFactor) {
+        _sourceProvider = sourceProvider ?? throw new ArgumentNullException(nameof(sourceProvider));
+        _speedFactor = speedFactor;
+        _bytesPerSample = sourceProvider.WaveFormat.BitsPerSample / 8 * sourceProvider.WaveFormat.Channels;
+        // Увеличим размер буфера для лучшей производительности
+        _buffer = new byte[sourceProvider.WaveFormat.AverageBytesPerSecond * 2];
+        _bufferPos = 0;
+        _bufferFilled = 0;
+    }
+
+    public int Read(byte[] buffer, int offset, int count) {
+        int bytesWritten = 0;
+
+        while (bytesWritten < count) {
+            // Заполняем буфер, если он пуст
+            if (_bufferPos >= _bufferFilled) {
+                _bufferFilled = _sourceProvider.Read(_buffer, 0, _buffer.Length);
+                if (_bufferFilled == 0)
+                    break; // Конец потока
+                _bufferPos = 0;
+            }
+
+            // Вычисляем, сколько байт нужно прочитать
+            int bytesToCopy = Math.Min(count - bytesWritten, _bufferFilled - _bufferPos);
+            int bytesToSkip = (int)(bytesToCopy * _speedFactor);
+
+            // Копируем данные в выходной буфер
+            Array.Copy(_buffer, _bufferPos, buffer, offset + bytesWritten, bytesToCopy);
+            bytesWritten += bytesToCopy;
+
+            // Обновляем позицию в буфере с учетом фактора скорости
+            _bufferPos += bytesToSkip;
+        }
+
+        return bytesWritten;
+    }
+
+    public void Dispose() {
+        // Нет неуправляемых ресурсов для освобождения
+    }
+}
+
 public partial class MainWindow : Window {
     private JObject ravdessData = new JObject();
     private List<JObject> selectedAudioFiles = new List<JObject>();
@@ -296,16 +348,23 @@ public partial class MainWindow : Window {
     private async void PlayAudioFile(string filePath) {
         if (string.IsNullOrEmpty(filePath)) return;
 
-        using (var audioFile = new AudioFileReader(filePath))
-            using (var outputDevice = new WaveOutEvent()) {
-                outputDevice.Init(audioFile);
-                outputDevice.Play();
+        using (var audioFile = new AudioFileReader(filePath)) {
+            var speedUpFactor = 1.0f; // Speed up factor
 
-                while (outputDevice.PlaybackState == PlaybackState.Playing) {
-                    await Task.Delay(100);
+            using (var speedUpProvider = new SpeedUpWaveProvider(audioFile, speedUpFactor))
+                using (var outputDevice = new WaveOutEvent()) {
+                    outputDevice.Init(speedUpProvider);
+                    outputDevice.Play();
+
+                    while (outputDevice.PlaybackState == PlaybackState.Playing) {
+                        await Task.Delay(100);
+                    }
                 }
-            }
+        }
     }
+
+
+
 
     private string GetTranslatedEmotion(string emotion) {
         var emotionTranslations = new Dictionary<string, string> {
