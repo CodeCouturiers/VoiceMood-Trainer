@@ -8,7 +8,7 @@ using NAudio.Wave;
 namespace VoiceMood_Trainer {
 public partial class MainWindow : Window {
     private JObject ravdessData = new JObject();
-    private List<JObject> files_to_play = new List<JObject>();
+    private List<JObject> selectedAudioFiles = new List<JObject>();
     private int currentFileIndex;
     private int correctAnswers;
     private int incorrectAnswers;
@@ -134,8 +134,8 @@ public partial class MainWindow : Window {
     }
 
     private void RepeatButton_Click(object sender, RoutedEventArgs e) {
-        if (isTestRunning && currentFileIndex < files_to_play.Count) {
-            PlayAudioFile(files_to_play[currentFileIndex]
+        if (isTestRunning && currentFileIndex < selectedAudioFiles.Count) {
+            PlayAudioFile(selectedAudioFiles[currentFileIndex]
                           ["path"]!.ToString());
             EmotionOptions.IsEnabled = true;
         }
@@ -145,7 +145,7 @@ public partial class MainWindow : Window {
         var emotionsToTest = ravdessData["presets"]
                              [presetKey]
                              .ToObject<List<string>>();
-        files_to_play = new List<JObject>();
+        selectedAudioFiles = new List<JObject>();
 
         foreach (var actor in ravdessData["actors"]
                  .Children()) {
@@ -154,7 +154,7 @@ public partial class MainWindow : Window {
                 .Where(file => emotionsToTest.Contains(file["emotion"]
                         .ToString()))
                 .ToList();
-            files_to_play.AddRange(actorFiles);
+            selectedAudioFiles.AddRange(actorFiles);
         }
 
         currentFileIndex = 0;
@@ -163,8 +163,8 @@ public partial class MainWindow : Window {
         IncorrectAnswersText.Text = "0";
 
         // Перемешиваем файлы
-        files_to_play =
-            files_to_play.OrderBy(x => random.Next()).Take(100).ToList();
+        selectedAudioFiles =
+            selectedAudioFiles.OrderBy(x => random.Next()).Take(100).ToList();
 
         UpdateEmotionButtons(emotionsToTest);
 
@@ -235,8 +235,8 @@ public partial class MainWindow : Window {
     private async void PlayNextAudio() {
         if (!isTestRunning) return;
 
-        if (currentFileIndex < files_to_play.Count) {
-            var currentFile = files_to_play[currentFileIndex];
+        if (currentFileIndex < selectedAudioFiles.Count) {
+            var currentFile = selectedAudioFiles[currentFileIndex];
             string filePath = currentFile["path"]!.ToString();
             currentCorrectEmotion = currentFile["emotion"]?.ToString();
 
@@ -244,7 +244,7 @@ public partial class MainWindow : Window {
             await Task.Run(() => PlayAudioFile(filePath));
 
             // Обновляем кнопки с эмоциями
-            var currentEmotions = files_to_play
+            var currentEmotions = selectedAudioFiles
                                   .Select(f => f["emotion"]
                                           .ToString())
                                   .Distinct()
@@ -261,7 +261,7 @@ public partial class MainWindow : Window {
             NextButton.IsEnabled = false;
             RepeatButton.IsEnabled = false;  // Disable the repeat button
             StatusText.Text = "Тест завершен";
-            MessageBox.Show($"Тест завершен! Правильных ответов: {correctAnswers} из {files_to_play.Count}");
+            MessageBox.Show($"Тест завершен! Правильных ответов: {correctAnswers} из {selectedAudioFiles.Count}");
         }
     }
 
@@ -296,7 +296,7 @@ public partial class MainWindow : Window {
 
     private void EmotionButton_Click(object sender, RoutedEventArgs e) {
         var selectedEmotion = ((Button)sender).Tag.ToString();
-        var correctEmotion = files_to_play[currentFileIndex]
+        var correctEmotion = selectedAudioFiles[currentFileIndex]
                              ["emotion"]
                              .ToString();
 
@@ -313,9 +313,9 @@ public partial class MainWindow : Window {
             FeedbackText.Foreground = Brushes.Red;
         }
 
-        ScoreText.Text = $"Счет: {correctAnswers}/{files_to_play.Count}";
+        ScoreText.Text = $"Счет: {correctAnswers}/{selectedAudioFiles.Count}";
         ProgressBar.Value =
-            (double)(currentFileIndex + 1) / files_to_play.Count * 100;
+            (double)(currentFileIndex + 1) / selectedAudioFiles.Count * 100;
 
         EmotionOptions.IsEnabled = false;
         NextButton.IsEnabled = true;
