@@ -17,7 +17,7 @@ public partial class MainWindow : Window {
     private string? currentCorrectEmotion;
     // New fields for statistics
     private int totalFiles;
-    private int loadedFiles;
+    private int loadedFiles = 0;
     private int numberOfActors;
     private int numberOfEmotions;
     private string? selectedPresetKey;
@@ -31,19 +31,17 @@ public partial class MainWindow : Window {
         string jsonText = File.ReadAllText("ravdess_data.json");
         ravdessData = JObject.Parse(jsonText);
 
-        // Обновляем статистику
-        totalFiles = ravdessData["actors"]
-                     .Children()
-                     .Sum(actor => actor.First.Children<JObject>().Count());
-        numberOfActors = ravdessData["actors"]
-                         .Count();
-        numberOfEmotions = ravdessData["presets"]
-                           ["all_emotions"]
-                           .Count();
+        // Update statistics
+        totalFiles = ravdessData["actors"]?.Children()
+                     .Sum(actor => actor.First?.Children<JObject>().Count() ?? 0) ?? 0;
+        numberOfActors = ravdessData["actors"]?.Count() ?? 0;
+        numberOfEmotions = ravdessData["presets"]?["all_emotions"]?.Count() ?? 0;
 
-        // Добавляем пресеты в код
+        loadedFiles = totalFiles; // Assuming all files are loaded
+
+        // Add presets to the code
         ravdessData["presets"] = new JObject {
-            // Пресеты, которые уже были
+            // Existing presets
             {
                 "all_emotions", new JArray("neutral", "calm", "happy", "sad", "angry",
                                            "fearful", "disgust", "surprised")
@@ -55,12 +53,12 @@ public partial class MainWindow : Window {
                 "neutral_and_extreme",
                 new JArray("neutral", "happy", "angry", "fearful")
             },
-            // Новые пресеты
+            // New presets
             {"calm_and_tension", new JArray("calm", "fearful", "angry")},
             {"surprise_and_disgust", new JArray("surprised", "disgust")},
             {"happy_and_sad", new JArray("happy", "sad")},
 
-            // Новые пресеты для распознавания лжи
+            // New presets for lie detection
             {
                 "denial_of_involvement",
                 new JArray("fearful", "angry", "disgust", "neutral")
@@ -93,11 +91,12 @@ public partial class MainWindow : Window {
         TotalFilesText.Text = $"Общее количество файлов: {totalFiles}";
     }
 
-    // Обработчик события для ComboBox
+    // Event handler for ComboBox
     private void PresetComboBox_SelectionChanged(object sender,
             SelectionChangedEventArgs e) {
-        var selectedItem = (ComboBoxItem)e.AddedItems[0];
-        selectedPresetKey = (string)selectedItem.Tag;
+        if (e.AddedItems.Count > 0 && e.AddedItems[0] is ComboBoxItem selectedItem) {
+            selectedPresetKey = selectedItem.Tag as string;
+        }
     }
 
     private void StartButton_Click(object sender, RoutedEventArgs e) {
@@ -136,24 +135,19 @@ public partial class MainWindow : Window {
     private void RepeatButton_Click(object sender, RoutedEventArgs e) {
         if (isTestRunning && currentFileIndex < selectedAudioFiles.Count) {
             PlayAudioFile(selectedAudioFiles[currentFileIndex]
-                          ["path"]!.ToString());
+                          ["path"]?.ToString() ?? "");
             EmotionOptions.IsEnabled = true;
         }
     }
 
     private void SetupTest(string presetKey) {
-        var emotionsToTest = ravdessData["presets"]
-                             [presetKey]
-                             .ToObject<List<string>>();
+        var emotionsToTest = ravdessData["presets"]?[presetKey]?.ToObject<List<string>>() ?? new List<string>();
         selectedAudioFiles = new List<JObject>();
 
-        foreach (var actor in ravdessData["actors"]
-                 .Children()) {
-            var actorFiles =
-                actor.First.Children<JObject>()
-                .Where(file => emotionsToTest.Contains(file["emotion"]
-                        .ToString()))
-                .ToList();
+        foreach (var actor in ravdessData["actors"]?.Children() ?? Enumerable.Empty<JToken>()) {
+            var actorFiles = actor.First?.Children<JObject>()
+                             .Where(file => file["emotion"] != null && emotionsToTest.Contains(file["emotion"].ToString()))
+                             .ToList() ?? new List<JObject>();
             selectedAudioFiles.AddRange(actorFiles);
         }
 
@@ -162,9 +156,8 @@ public partial class MainWindow : Window {
         CorrectAnswersText.Text = "0";
         IncorrectAnswersText.Text = "0";
 
-        // Перемешиваем файлы
-        selectedAudioFiles =
-            selectedAudioFiles.OrderBy(x => random.Next()).Take(100).ToList();
+        // Shuffle files
+        selectedAudioFiles = selectedAudioFiles.OrderBy(x => random.Next()).Take(100).ToList();
 
         UpdateEmotionButtons(emotionsToTest);
 
@@ -218,7 +211,7 @@ public partial class MainWindow : Window {
                 button.Click += EmotionButton_Click;
                 EmotionOptions.Children.Add(button);
             } else {
-                // Для эмоций без перевода и SVG
+                // For emotions without translation and SVG
                 var button = new Button {
                     Content = emotion,
                     Tag = emotion,
@@ -237,22 +230,21 @@ public partial class MainWindow : Window {
 
         if (currentFileIndex < selectedAudioFiles.Count) {
             var currentFile = selectedAudioFiles[currentFileIndex];
-            string filePath = currentFile["path"]!.ToString();
+            string filePath = currentFile["path"]?.ToString() ?? "";
             currentCorrectEmotion = currentFile["emotion"]?.ToString();
 
             // Play audio asynchronously
             await Task.Run(() => PlayAudioFile(filePath));
 
-            // Обновляем кнопки с эмоциями
+            // Update emotion buttons
             var currentEmotions = selectedAudioFiles
-                                  .Select(f => f["emotion"]
-                                          .ToString())
+                                  .Select(f => f["emotion"]?.ToString() ?? "")
                                   .Distinct()
                                   .ToList();
             UpdateEmotionButtons(currentEmotions);
 
             RepeatButton.IsEnabled = true;  // Enable the repeat button
-            EmotionOptions.IsEnabled = true;  // Активировать кнопки выбора эмоций
+            EmotionOptions.IsEnabled = true;  // Activate emotion selection buttons
         } else {
             // Test completed
             isTestRunning = false;
@@ -265,8 +257,9 @@ public partial class MainWindow : Window {
         }
     }
 
-
     private async void PlayAudioFile(string filePath) {
+        if (string.IsNullOrEmpty(filePath)) return;
+
         using (var audioFile = new AudioFileReader(filePath))
             using (var outputDevice = new WaveOutEvent()) {
                 outputDevice.Init(audioFile);
@@ -278,7 +271,6 @@ public partial class MainWindow : Window {
             }
     }
 
-
     private string GetTranslatedEmotion(string emotion) {
         var emotionTranslations = new Dictionary<string, string> {
             {"neutral", "Нейтральная"}, {"calm", "Спокойная"},
@@ -287,18 +279,12 @@ public partial class MainWindow : Window {
             {"disgust", "Отвращение"},  {"surprised", "Удивленная"}
         };
 
-        if (emotionTranslations.ContainsKey(emotion)) {
-            return emotionTranslations[emotion];
-        } else {
-            return emotion;
-        }
+        return emotionTranslations.TryGetValue(emotion, out var translatedEmotion) ? translatedEmotion : emotion;
     }
 
     private void EmotionButton_Click(object sender, RoutedEventArgs e) {
-        var selectedEmotion = ((Button)sender).Tag.ToString();
-        var correctEmotion = selectedAudioFiles[currentFileIndex]
-                             ["emotion"]
-                             .ToString();
+        var selectedEmotion = ((Button)sender).Tag?.ToString();
+        var correctEmotion = selectedAudioFiles[currentFileIndex]["emotion"]?.ToString();
 
         if (selectedEmotion == correctEmotion) {
             correctAnswers++;
@@ -308,14 +294,12 @@ public partial class MainWindow : Window {
         } else {
             incorrectAnswers++;
             IncorrectAnswersText.Text = incorrectAnswers.ToString();
-            FeedbackText.Text =
-                $"❌ Неправильно! Верный ответ: {GetTranslatedEmotion(correctEmotion)}";  // Перевод эмоции
+            FeedbackText.Text = $"❌ Неправильно! Верный ответ: {GetTranslatedEmotion(correctEmotion ?? "")}";
             FeedbackText.Foreground = Brushes.Red;
         }
 
         ScoreText.Text = $"Счет: {correctAnswers}/{selectedAudioFiles.Count}";
-        ProgressBar.Value =
-            (double)(currentFileIndex + 1) / selectedAudioFiles.Count * 100;
+        ProgressBar.Value = (double)(currentFileIndex + 1) / selectedAudioFiles.Count * 100;
 
         EmotionOptions.IsEnabled = false;
         NextButton.IsEnabled = true;
