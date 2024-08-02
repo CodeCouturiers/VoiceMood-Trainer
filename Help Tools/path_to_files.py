@@ -10,5 +10,5 @@ def list_files_and_folders(start_path):
             print(f'{subindent}{f}')
 
 # Укажите начальную директорию, которую хотите просмотреть
-start_path = r'C:\Users\user\Desktop\VoiceMood Trainer\claude\ravdess_samples'
+start_path = r'C:\Users\user\Desktop\VoiceMood Trainer\Help Tools\lang'
 list_files_and_folders(start_path)
