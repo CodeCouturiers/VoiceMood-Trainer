@@ -11,6 +11,8 @@ namespace VoiceMood_Trainer
         public ProgressionModeWindow(MainWindow mainWindow)
         {
             InitializeComponent();
+            this.Icon = EmotionResourcesManager.GetAppIcon();
+
             this.mainWindow = mainWindow;
             emotionItems = new ObservableCollection<EmotionItem>();
             InitializeEmotions();

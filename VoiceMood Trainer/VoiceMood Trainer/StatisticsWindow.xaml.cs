@@ -15,6 +15,8 @@ namespace VoiceMood_Trainer
         public StatisticsWindow(Dictionary<DateTime, List<EmotionStatistics>> statistics)
         {
             InitializeComponent();
+            this.Icon = EmotionResourcesManager.GetAppIcon();
+
             statisticsByDate = statistics;
             DateSelector.SelectedDate = DateTime.Today;
             UpdateStatistics(DateTime.Today);

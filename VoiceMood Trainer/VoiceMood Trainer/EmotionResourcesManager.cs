@@ -3,6 +3,7 @@ using System.Globalization;
 using System.IO;
 using System.Resources;
 using System.Windows;
+using System.Windows.Media.Imaging;
 using NAudio.Wave;
 
 namespace VoiceMood_Trainer
@@ -31,6 +32,25 @@ namespace VoiceMood_Trainer
             System.Drawing.Color color = ColorTranslator.FromHtml(colorString);
 
             return (text, svgPath, color);
+        }
+
+        public static BitmapImage GetAppIcon()
+        {
+            using (var bitmap = EmotionResources.emotions)
+                using (var memory = new MemoryStream())
+                {
+                    bitmap.Save(memory, System.Drawing.Imaging.ImageFormat.Png);
+                    memory.Position = 0;
+
+                    var bitmapImage = new BitmapImage();
+                    bitmapImage.BeginInit();
+                    bitmapImage.StreamSource = memory;
+                    bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+                    bitmapImage.EndInit();
+                    bitmapImage.Freeze();
+
+                    return bitmapImage;
+                }
         }
 
         private static void InitializeSounds()

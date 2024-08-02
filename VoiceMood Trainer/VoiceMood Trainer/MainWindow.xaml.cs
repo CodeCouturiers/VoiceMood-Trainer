@@ -5,6 +5,7 @@ using System.Windows.Media;
 using Newtonsoft.Json.Linq;
 using NAudio.Wave;
 using Newtonsoft.Json;
+using System.Windows.Media.Imaging;
 
 namespace VoiceMood_Trainer
 {
@@ -33,6 +34,8 @@ namespace VoiceMood_Trainer
         public MainWindow()
         {
             InitializeComponent();
+            this.Icon = EmotionResourcesManager.GetAppIcon();
+
             LoadRavdessData();
             LoadStatisticsFromFile();
 

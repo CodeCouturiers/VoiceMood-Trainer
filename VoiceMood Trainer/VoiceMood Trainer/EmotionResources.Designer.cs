@@ -152,6 +152,16 @@ namespace VoiceMood_Trainer {
         }
         
         /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap emotions {
+            get {
+                object obj = ResourceManager.GetObject("emotions", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на #FFFFB02E.
         /// </summary>
         internal static string fearful_Color {
