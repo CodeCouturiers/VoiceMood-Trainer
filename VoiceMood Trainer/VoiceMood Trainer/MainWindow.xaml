@@ -1,7 +1,7 @@
 ﻿<Window x:Class="VoiceMood_Trainer.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="{DynamicResource WindowTitle}" Height="786" Width="916"
+        Title="{DynamicResource WindowTitle}" Height="875" Width="916"
         Background="#202124">
     <Window.Resources>
         <Storyboard x:Key="ButtonClickAnimation">
@@ -149,12 +149,45 @@
 
                 <Button Content="View Statistics" Click="OpenStatisticsWindow_Click" 
         Width="120" Height="40" Margin="0,10,0,0" HorizontalAlignment="Left"/>
-
+                <TextBlock Text="Mouse Button Shortcuts" Margin="0,10,0,5" FontWeight="Bold"/>
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
+                    <TextBlock Text="Start:" Width="50" VerticalAlignment="Center"/>
+                    <ComboBox x:Name="StartButtonBinding" Width="180" SelectionChanged="MouseBindingChanged">
+                        <ComboBoxItem Content="No shortcut" Tag="None"/>
+                        <ComboBoxItem Content="Mouse button 4 (Back)" Tag="XButton1"/>
+                        <ComboBoxItem Content="Mouse button 5 (Forward)" Tag="XButton2"/>
+                    </ComboBox>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
+                    <TextBlock Text="Stop:" Width="50" VerticalAlignment="Center"/>
+                    <ComboBox x:Name="StopButtonBinding" Width="180" SelectionChanged="MouseBindingChanged">
+                        <ComboBoxItem Content="No shortcut" Tag="None"/>
+                        <ComboBoxItem Content="Mouse button 4 (Back)" Tag="XButton1"/>
+                        <ComboBoxItem Content="Mouse button 5 (Forward)" Tag="XButton2"/>
+                    </ComboBox>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
+                    <TextBlock Text="Next:" Width="50" VerticalAlignment="Center"/>
+                    <ComboBox x:Name="NextButtonBinding" Width="180" SelectionChanged="MouseBindingChanged">
+                        <ComboBoxItem Content="No shortcut" Tag="None"/>
+                        <ComboBoxItem Content="Mouse button 4 (Back)" Tag="XButton1"/>
+                        <ComboBoxItem Content="Mouse button 5 (Forward)" Tag="XButton2"/>
+                    </ComboBox>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
+                    <TextBlock Text="Repeat:" Width="50" VerticalAlignment="Center"/>
+                    <ComboBox x:Name="RepeatButtonBinding" Width="180" SelectionChanged="MouseBindingChanged">
+                        <ComboBoxItem Content="No shortcut" Tag="None"/>
+                        <ComboBoxItem Content="Mouse button 4 (Back)" Tag="XButton1"/>
+                        <ComboBoxItem Content="Mouse button 5 (Forward)" Tag="XButton2"/>
+                    </ComboBox>
+                </StackPanel>
             </StackPanel>
 
         </Grid>
 
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20,0,0">
+            
             <Button x:Name="StartButton" Content="{DynamicResource Start}" Width="120" Height="40" Margin="0,0,10,0" Click="StartButton_Click"/>
             <Button x:Name="StopButton" Content="{DynamicResource Stop}" Width="120" Height="40" IsEnabled="False" Margin="0,0,10,0" Click="StopButton_Click"/>
             <Button x:Name="NextButton" Content="{DynamicResource Next}" Width="120" Height="40" IsEnabled="False" Margin="0,0,10,0" Click="NextButton_Click"/>

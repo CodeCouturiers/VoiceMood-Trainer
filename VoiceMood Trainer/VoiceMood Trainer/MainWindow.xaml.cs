@@ -7,6 +7,7 @@ using NAudio.Wave;
 using Newtonsoft.Json;
 using System.Windows.Media.Imaging;
 using System.Windows.Media.Animation;
+using System.Windows.Input;
 
 namespace VoiceMood_Trainer
 {
@@ -31,10 +32,23 @@ namespace VoiceMood_Trainer
         Dictionary<DateTime, List<EmotionStatistics>>();
         private Dictionary<string, (int correct, int incorrect)> currentSessionStatistics = new
         Dictionary<string, (int correct, int incorrect)>();
+        private Dictionary<string, Button> buttonMappings;
 
         public MainWindow()
         {
             InitializeComponent();
+
+            buttonMappings = new Dictionary<string, Button>
+            {
+                {"StartButtonBinding", StartButton},
+                {"StopButtonBinding", StopButton},
+                {"NextButtonBinding", NextButton},
+                {"RepeatButtonBinding", RepeatButton}
+            };
+
+            this.MouseDown += MainWindow_MouseDown;
+
+
             this.Icon = EmotionResourcesManager.GetAppIcon();
 
             LoadRavdessData();
@@ -62,6 +76,63 @@ namespace VoiceMood_Trainer
         private void SoundEffectsCheckBox_CheckedChanged(object sender, RoutedEventArgs e)
         {
             areSoundEffectsEnabled = SoundEffectsCheckBox.IsChecked ?? false;
+        }
+        private void MainWindow_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.XButton1 || e.ChangedButton == MouseButton.XButton2)
+            {
+                foreach (var binding in buttonMappings)
+                {
+                    var comboBox = (ComboBox)FindName(binding.Key);
+                    if (comboBox.SelectedItem is ComboBoxItem selectedItem &&
+                            selectedItem.Tag.ToString() == e.ChangedButton.ToString())
+                    {
+                        if (binding.Value.IsEnabled)
+                        {
+                            binding.Value.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+        private void MouseBindingChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (sender is ComboBox comboBox && e.AddedItems.Count > 0)
+            {
+                var selectedItem = e.AddedItems[0] as ComboBoxItem;
+                if (selectedItem != null)
+                {
+                    string buttonName = comboBox.Name;
+                    string selectedBinding = selectedItem.Tag.ToString();
+
+                    // Unbind from all other ComboBoxes if this binding is selected
+                    if (selectedBinding != "None")
+                    {
+                        foreach (var binding in buttonMappings)
+                        {
+                            if (binding.Key != buttonName)
+                            {
+                                var otherComboBox = (ComboBox)FindName(binding.Key);
+                                if (otherComboBox.SelectedItem is ComboBoxItem item && item.Tag.ToString() == selectedBinding)
+                                {
+                                    otherComboBox.SelectedIndex = 0; // Set to "None"
+                                }
+                            }
+                        }
+                    }
+
+                    // Update the status text to reflect the new binding
+                    UpdateMouseBindingStatus(buttonName, selectedBinding);
+                }
+            }
+        }
+
+        private void UpdateMouseBindingStatus(string buttonName, string binding)
+        {
+            string buttonText = buttonName.Replace("ButtonBinding", "");
+            string bindingText = binding == "None" ? "unbound" : $"bound to {binding} mouse button";
+            StatusText.Text = $"{buttonText} button is now {bindingText}";
         }
 
 
@@ -136,6 +207,24 @@ namespace VoiceMood_Trainer
                                      .Select(f => f["emotion"]?.ToString() ?? "")
                                      .Distinct()
                                      .ToList());
+            }
+            var mouseBindingsTextBlock = FindName("MouseBindingsText") as TextBlock;
+            if (mouseBindingsTextBlock != null)
+            {
+                mouseBindingsTextBlock.Text = "Mouse Button Bindings";
+            }
+
+            UpdateComboBoxTranslations(StartButtonBinding);
+            UpdateComboBoxTranslations(StopButtonBinding);
+            UpdateComboBoxTranslations(NextButtonBinding);
+            UpdateComboBoxTranslations(RepeatButtonBinding);
+        }
+
+        private void UpdateComboBoxTranslations(ComboBox comboBox)
+        {
+            foreach (ComboBoxItem item in comboBox.Items)
+            {
+                item.Content = LocalizationManager.Instance.GetString(item.Tag.ToString());
             }
         }
 
