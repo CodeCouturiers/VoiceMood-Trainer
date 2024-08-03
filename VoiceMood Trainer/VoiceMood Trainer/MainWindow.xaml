@@ -4,6 +4,25 @@
         Title="{DynamicResource WindowTitle}" Height="786" Width="916"
         Background="#202124">
     <Window.Resources>
+        <Storyboard x:Key="ButtonClickAnimation">
+            <DoubleAnimation
+        Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
+        From="1.0" To="1.2" Duration="0:0:0.1" AutoReverse="True" />
+            <DoubleAnimation
+        Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
+        From="1.0" To="1.2" Duration="0:0:0.1" AutoReverse="True" />
+        </Storyboard>
+        <Storyboard x:Key="CorrectAnswerAnimation">
+            <DoubleAnimation
+        Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
+        From="1.0" To="1.2" Duration="0:0:0.1" AutoReverse="True" RepeatBehavior="3x" />
+            <DoubleAnimation
+        Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
+        From="1.0" To="1.2" Duration="0:0:0.1" AutoReverse="True" RepeatBehavior="3x" />
+            <ColorAnimation
+        Storyboard.TargetProperty="(Button.Background).(SolidColorBrush.Color)"
+        To="Green" Duration="0:0:0.1" AutoReverse="True" RepeatBehavior="3x" />
+        </Storyboard>
         <!-- Основной стиль для TextBlock -->
         <Style TargetType="TextBlock">
             <Setter Property="Foreground" Value="#E8EAED"/>

@@ -6,6 +6,7 @@ using Newtonsoft.Json.Linq;
 using NAudio.Wave;
 using Newtonsoft.Json;
 using System.Windows.Media.Imaging;
+using System.Windows.Media.Animation;
 
 namespace VoiceMood_Trainer
 {
@@ -290,7 +291,9 @@ namespace VoiceMood_Trainer
                         Height = 50,
                         Width = 150,
                         Margin = new Thickness(5),
-                        Tag = emotion
+                        Tag = emotion,
+                        RenderTransformOrigin = new Point(0.5, 0.5),
+                        RenderTransform = new ScaleTransform(1, 1),
                     };
 
                     var stackPanel = new StackPanel
@@ -448,8 +451,19 @@ namespace VoiceMood_Trainer
 
         private void EmotionButton_Click(object sender, RoutedEventArgs e)
         {
-            var selectedEmotion = ((Button)sender).Tag?.ToString();
+            var selectedButton = (Button)sender;
+            var selectedEmotion = selectedButton.Tag?.ToString();
             var correctEmotion = selectedAudioFiles[currentFileIndex]["emotion"]?.ToString();
+
+            // Найдем кнопку с правильным ответом
+            Button correctButton = FindButtonByEmotion(correctEmotion);
+
+            if (correctButton != null)
+            {
+                // Анимируем правильную кнопку
+                Storyboard storyboard = (Storyboard)FindResource("CorrectAnswerAnimation");
+                storyboard.Begin(correctButton);
+            }
 
             if (selectedEmotion == correctEmotion)
             {
@@ -469,7 +483,6 @@ namespace VoiceMood_Trainer
                 FeedbackText.Foreground = System.Windows.Media.Brushes.Red;
                 EmotionResourcesManager.PlayIncorrectSound(areSoundEffectsEnabled);
                 UpdateStatistics(correctEmotion, false);
-
             }
 
             ScoreText.Text = string.Format(LocalizationManager.Instance.GetString("ScoreFormat"), correctAnswers,
@@ -478,6 +491,18 @@ namespace VoiceMood_Trainer
 
             EmotionOptions.IsEnabled = false;
             NextButton.IsEnabled = true;
+        }
+
+        private Button FindButtonByEmotion(string emotion)
+        {
+            foreach (var child in EmotionOptions.Children)
+            {
+                if (child is Button button && button.Tag?.ToString() == emotion)
+                {
+                    return button;
+                }
+            }
+            return null;
         }
         private void SaveStatisticsToFile()
         {
