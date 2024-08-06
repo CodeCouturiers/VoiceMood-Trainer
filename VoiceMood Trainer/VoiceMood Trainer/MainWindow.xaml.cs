@@ -33,7 +33,8 @@ namespace VoiceMood_Trainer
         private Dictionary<string, (int correct, int incorrect)> currentSessionStatistics = new
         Dictionary<string, (int correct, int incorrect)>();
         private Dictionary<string, Button> buttonMappings;
-
+        private WaveOutEvent outputDevice;
+        private AudioFileReader audioFile;
         public MainWindow()
         {
             InitializeComponent();
@@ -271,6 +272,46 @@ namespace VoiceMood_Trainer
 
             UpdateStatistics();
         }
+        private void OpenEmotionDiscriminationMode_Click(object sender, RoutedEventArgs e)
+        {
+            var emotionDiscriminationWindow = new EmotionDiscriminationWindow(this);
+            emotionDiscriminationWindow.ShowDialog();
+        }
+
+
+        public void PlayRandomAudioForEmotion(string emotion)
+        {
+            if (!selectedAudioFiles.Any(f => f["emotion"]?.ToString() == emotion))
+            {
+                // Если нет файлов для данной эмоции, заполняем список
+                var emotionFiles = ravdessData["actors"]?
+                                   .SelectMany(actor => actor.First?.Children<JObject>() ?? Enumerable.Empty<JObject>())
+                                   .Where(file => file["emotion"]?.ToString() == emotion)
+                                   .ToList();
+
+                if (emotionFiles != null && emotionFiles.Any())
+                {
+                    selectedAudioFiles.AddRange(emotionFiles);
+                }
+                else
+                {
+                    MessageBox.Show($"No audio files found for emotion: {emotion}");
+                    return;
+                }
+            }
+
+            // Теперь выбираем случайный файл из обновленного списка
+            var availableFiles = selectedAudioFiles.Where(f => f["emotion"]?.ToString() == emotion).ToList();
+            if (availableFiles.Any())
+            {
+                var randomFile = availableFiles[random.Next(availableFiles.Count)];
+                PlayAudioFile(randomFile["path"]?.ToString() ?? "");
+            }
+            else
+            {
+                MessageBox.Show($"No audio files available for emotion: {emotion}");
+            }
+        }
 
         private void UpdateStatistics()
         {
@@ -484,11 +525,30 @@ namespace VoiceMood_Trainer
                                               selectedAudioFiles.Count));
             }
         }
+        public void StopAudio()
+        {
+            if (outputDevice != null)
+            {
+                outputDevice.Stop();
+                outputDevice.Dispose();
+                outputDevice = null;
+            }
 
+            if (audioFile != null)
+            {
+                audioFile.Dispose();
+                audioFile = null;
+            }
+        }
+        protected override void OnClosed(EventArgs e)
+        {
+            base.OnClosed(e);
+            StopAudio();
+        }
         private async void PlayAudioFile(string filePath)
         {
             if (string.IsNullOrEmpty(filePath)) { return; }
-
+            StopAudio();
             using (var audioFile = new AudioFileReader(filePath))
                 using (var speedUpProvider = new SpeedUpWaveProvider(audioFile, speedUpFactor))
                     using (var outputDevice = new WaveOutEvent())
